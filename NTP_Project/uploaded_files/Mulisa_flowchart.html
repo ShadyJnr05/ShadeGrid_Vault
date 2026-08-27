@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4 – IPO Charts & Flowcharts | Modau.M IT</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161920;
+    --card: #1c2030;
+    --border: #2a2f3e;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #111318;
+    --ipo-input: #1a3a4a;
+    --ipo-proc: #1a2a3a;
+    --ipo-out: #1a3a2a;
+  }
+  body.light {
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --accent: #0284c7;
+    --accent2: #7c3aed;
+    --accent3: #059669;
+    --warn: #d97706;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code-bg: #f8fafc;
+    --ipo-input: #e0f2fe;
+    --ipo-proc: #ede9fe;
+    --ipo-out: #d1fae5;
+  }
+  body.light .ipo-table thead .th-input { background:#bae6fd; color:#0c4a6e; }
+  body.light .ipo-table thead .th-proc  { background:#ddd6fe; color:#3b0764; }
+  body.light .ipo-table thead .th-out   { background:#a7f3d0; color:#064e3b; }
+  body.light .ipo-table tbody .td-input { background:#e0f2fe; color:#075985; }
+  body.light .ipo-table tbody .td-proc  { background:#ede9fe; color:#4c1d95; }
+  body.light .ipo-table tbody .td-out   { background:#d1fae5; color:#065f46; }
+  body.light .pseudo { background:#f1f5f9; border-color:#cbd5e1; }
+  body.light .callout { background:#e0f2fe; border-color:#0284c7; }
+  body.light .callout.warn { background:#fef9c3; border-color:#d97706; }
+  body.light .callout.green { background:#d1fae5; border-color:#059669; }
+  body.light .callout p { color:#334155; }
+  body.light .card p, body.light .card li { color:#475569; }
+  body.light .tab { color:#64748b; }
+  body.light .tab.active { color:#0284c7; border-bottom-color:#0284c7; }
+  body.light .flowchart-wrap { background:#f8fafc; }
+
+  /* toggle button */
+  .theme-toggle {
+    margin-left: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: .35rem .9rem;
+    cursor: pointer;
+    font-size: .8rem;
+    color: var(--text);
+    display: flex; align-items: center; gap: .4rem;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: .85rem; font-weight: 700; }
+  header h1 { font-size: 1rem; font-weight: 600; color: var(--text); }
+  header span { color: var(--muted); font-size: .8rem; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0 2rem;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: .75rem 1.5rem;
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    margin-bottom: 2rem;
+  }
+  .section-heading .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    color: var(--accent);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+  .section-heading h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: .5rem; }
+  .section-heading p { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .card p, .card li { font-size: .875rem; color: #a0aec0; line-height: 1.7; }
+  .card ul { padding-left: 1.25rem; }
+  .card ul li { margin-bottom: .3rem; }
+
+  .tag {
+    display: inline-block;
+    padding: .15rem .6rem;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tag-blue { background: #0e2a38; color: var(--accent); }
+  .tag-purple { background: #1e1040; color: #a78bfa; }
+  .tag-green { background: #0a2a1e; color: var(--accent3); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: #0e2030;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .callout.warn { border-color: var(--warn); background: #1a150a; }
+  .callout.green { border-color: var(--accent3); background: #0a1a14; }
+  .callout p { font-size: .875rem; color: #a0aec0; line-height: 1.6; }
+  .callout strong { color: var(--text); }
+
+  /* ── IPO TABLE ── */
+  .ipo-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1rem 0;
+    font-size: .875rem;
+  }
+  .ipo-table thead th {
+    padding: .75rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: .05em;
+    font-size: .75rem;
+  }
+  .ipo-table thead .th-input { background: #1a4a5a; color: #7dd3fc; }
+  .ipo-table thead .th-proc  { background: #1a1a5a; color: #a5b4fc; }
+  .ipo-table thead .th-out   { background: #0a3a2a; color: #6ee7b7; }
+  .ipo-table tbody td {
+    padding: .8rem 1rem;
+    vertical-align: top;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.8;
+  }
+  .ipo-table tbody .td-input { background: var(--ipo-input); color: #bae6fd; }
+  .ipo-table tbody .td-proc  { background: var(--ipo-proc);  color: #c7d2fe; }
+  .ipo-table tbody .td-out   { background: var(--ipo-out);   color: #a7f3d0; }
+
+  /* ── PSEUDOCODE BLOCK ── */
+  .pseudo {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8rem;
+    line-height: 2;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  .kw  { color: #c084fc; font-weight: 700; }
+  .typ { color: #fb923c; }
+  .str { color: #86efac; }
+  .var { color: #67e8f9; }
+  .com { color: var(--muted); font-style: italic; }
+  .op  { color: #f9a8d4; }
+  .indent { padding-left: 2rem; }
+
+  /* ── FLOWCHART SVG ── */
+  .flowchart-wrap {
+    background: #10141e;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    text-align: center;
+  }
+  .flowchart-wrap svg { max-width: 100%; }
+
+  /* ── SYMBOL LEGEND ── */
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .legend-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .legend-item svg { width: 80px; height: 50px; margin-bottom: .5rem; }
+  .legend-item .lname { font-size: .8rem; font-weight: 600; color: var(--text); }
+  .legend-item .luse  { font-size: .72rem; color: var(--muted); margin-top: .25rem; }
+
+  /* ── STEP BOX ── */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--accent2);
+    color: white;
+    font-weight: 700;
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: .2rem;
+  }
+  .step-num::before { content: counter(step); }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: .875rem; margin-bottom: .25rem; }
+  .step-body p { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── PROGRAM DEV CYCLE DIAGRAM ── */
+  .cycle-row {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .cycle-box {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .cycle-box .num { font-size: 1.5rem; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+  .cycle-box h4 { font-size: .9rem; font-weight: 600; margin: .25rem 0; }
+  .cycle-box ul { font-size: .75rem; color: var(--muted); padding-left: 1rem; line-height: 1.8; }
+  .cycle-arrow { display: flex; align-items: center; color: var(--muted); font-size: 1.5rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: .75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 600px) {
+    main { padding: 1rem; }
+    .cycle-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MODAU.M IT</div>
+  <div>
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <h1>Module 4 — IPO Charts &amp; Flowcharts</h1>
+      <span class="tag tag-blue">Dev Software 1</span>
+    </div>
+    <span>Walter Sisulu University · ICT · CNET</span>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('pseudocode')">Pseudocode Basics</div>
+  <div class="tab" onclick="switchTab('ipo')">IPO Charts</div>
+  <div class="tab" onclick="switchTab('flowcharts')">Flowcharts</div>
+  <div class="tab" onclick="switchTab('examples')">Full Examples</div>
+</div>
+
+<main>
+
+<!-- ════════════════════════════════ PSEUDOCODE ════════════════════════════════ -->
+<div id="tab-pseudocode" class="section active">
+  <div class="section-heading">
+    <div class="eyebrow">// 00 — revision</div>
+    <h2>Pseudocode &amp; the Program Development Cycle</h2>
+    <p>Before writing code or drawing flowcharts, developers use pseudocode to plan logic in plain structured English.</p>
+  </div>
+
+  <div class="cycle-row">
+    <div class="cycle-box">
+      <div class="num">1</div>
+      <h4>ANALYSIS</h4>
+      <ul>
+        <li>Understand the problem</li>
+        <li>Identify inputs &amp; outputs</li>
+        <li>What processing is needed?</li>
+        <li>Talk to users &amp; dev team</li>
+        <li>Tools: <strong>IPO Charts</strong></li>
+      </ul>
+    </div>
+    <div class="cycle-arrow">→</div>
+    <div class="cycle-box">
+      <div class="num">2</div>
+      <h4>DESIGN</h4>
+      <ul>
+        <li>Work out the algorithm</li>
+        <li>Test the algorithm</li>
+        <li>Design the UI &amp; data sources</li>
+        <li>Tools: <strong>Flowcharts, Pseudocode, Trace tables</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:2rem;">
+    <h3><span class="tag tag-purple">RULES</span> &nbsp;WSU Pseudocode Conventions</h3>
+    <div class="callout" style="margin-top:.75rem;">
+      <p>At WSU, pseudocode always starts with <strong>BEGIN</strong>, ends with <strong>END</strong>, and uses capital keywords. Variables must be <strong>DECLARE</strong>d before use.</p>
+    </div>
+    <div class="pseudo">
+<span class="kw">BEGIN</span>
+  <span class="com">-- Declare ALL variables first (group them)</span>
+  <span class="kw">DECLARE</span> <span class="var">VARIABLE1</span> <span class="kw">AS</span> <span class="typ">STRING</span>
+  <span class="kw">DECLARE</span> <span class="var">NUMBER1</span><span class="op">,</span> <span class="var">NUMBER2</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DECLARE</span> <span class="var">TOTAL</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+
+  <span class="com">-- Input</span>
+  <span class="kw">DISPLAY</span> <span class="str">"Enter a value: "</span>
+  <span class="kw">ACCEPT</span> <span class="var">NUMBER1</span>
+
+  <span class="com">-- Processing</span>
+  <span class="var">TOTAL</span> <span class="op">=</span> <span class="var">NUMBER1</span> <span class="op">+</span> <span class="var">NUMBER2</span>
+
+  <span class="com">-- Output</span>
+  <span class="kw">DISPLAY</span> <span class="str">"The total is "</span> <span class="var">TOTAL</span>
+<span class="kw">END</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="tag tag-blue">KEYWORDS</span> &nbsp;Essential Pseudocode Keywords</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-top:.75rem;">
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;">
+        <div class="tag tag-purple" style="margin-bottom:.5rem;">STRUCTURE</div>
+        <div class="pseudo" style="margin:0;font-size:.78rem;line-height:1.9;">
+<span class="kw">BEGIN</span>
+<span class="kw">END</span>
+<span class="kw">DECLARE</span> x <span class="kw">AS</span> <span class="typ">REAL</span>
+<span class="kw">DECLARE</span> x <span class="kw">AS</span> <span class="typ">INTEGER</span>
+<span class="kw">DECLARE</span> x <span class="kw">AS</span> <span class="typ">STRING</span>
+        </div>
+      </div>
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;">
+        <div class="tag tag-blue" style="margin-bottom:.5rem;">INPUT / OUTPUT</div>
+        <div class="pseudo" style="margin:0;font-size:.78rem;line-height:1.9;">
+<span class="kw">ACCEPT</span> <span class="var">variableName</span>
+<span class="kw">DISPLAY</span> <span class="str">"message"</span>
+<span class="kw">DISPLAY</span> <span class="str">"text"</span> <span class="var">variable</span>
+<span class="kw">OUTPUT</span> <span class="var">variableName</span>
+        </div>
+      </div>
+      <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;">
+        <div class="tag tag-green" style="margin-bottom:.5rem;">SELECTION</div>
+        <div class="pseudo" style="margin:0;font-size:.78rem;line-height:1.9;">
+<span class="kw">IF</span> <span class="var">condition</span> <span class="kw">THEN</span>
+  <span class="indent">statements</span>
+<span class="kw">ELSE</span>
+  <span class="indent">statements</span>
+<span class="kw">ENDIF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-top:1rem;">
+    <p><strong>⚠ Important:</strong> In pseudocode, use <strong>REAL</strong> for decimal numbers, <strong>INTEGER</strong> for whole numbers, and <strong>STRING</strong> for text. Variable names must be legal — no spaces, no special characters.</p>
+  </div>
+
+  <!-- Worked Example: Pseudocode only -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>📝 Example: Average of two test marks</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;">Ask the user to input a student's ID number and two test marks. Calculate and display the average mark.</p>
+    <div class="pseudo">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> <span class="var">IDNUMBER</span> <span class="kw">AS</span> <span class="typ">STRING</span>
+  <span class="kw">DECLARE</span> <span class="var">TESTMARK1</span><span class="op">,</span> <span class="var">TESTMARK2</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DECLARE</span> <span class="var">AVERAGE</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">ACCEPT</span> <span class="var">IDNUMBER</span>
+  <span class="kw">ACCEPT</span> <span class="var">TESTMARK1</span>
+  <span class="kw">ACCEPT</span> <span class="var">TESTMARK2</span>
+  <span class="var">AVERAGE</span> <span class="op">=</span> <span class="op">(</span><span class="var">TESTMARK1</span> <span class="op">+</span> <span class="var">TESTMARK2</span><span class="op">)</span> <span class="op">/</span> <span class="op">2</span>
+  <span class="kw">DISPLAY</span> <span class="str">"AVERAGE IS "</span> <span class="var">AVERAGE</span>
+<span class="kw">END</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ IPO CHARTS ════════════════════════════════ -->
+<div id="tab-ipo" class="section">
+  <div class="section-heading">
+    <div class="eyebrow">// 01 — analysis tool</div>
+    <h2>IPO Charts</h2>
+    <p>An <strong>Input → Processing → Output</strong> chart is used during the Analysis phase to understand and break down a problem before writing any code.</p>
+  </div>
+
+  <div class="card">
+    <h3>What is an IPO Chart?</h3>
+    <p>An IPO chart is a 3-column table that helps you <strong>analyse</strong> a problem by identifying what goes in (input), what must happen (processing), and what comes out (output).</p>
+    <div class="callout" style="margin-top:1rem;">
+      <p>There are many formats for IPO charts. At WSU, we follow the rules specified in the Module 4 notes exactly.</p>
+    </div>
+  </div>
+
+  <!-- Visual IPO explanation -->
+  <div class="flowchart-wrap">
+    <svg viewBox="0 0 700 130" xmlns="http://www.w3.org/2000/svg">
+      <!-- Input box -->
+      <rect x="20" y="25" width="180" height="80" rx="8" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="110" y="55" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono" font-size="12" font-weight="bold">INPUT</text>
+      <text x="110" y="75" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="10">variable names</text>
+      <text x="110" y="90" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="10">for all inputs</text>
+      <!-- Arrow 1 -->
+      <line x1="200" y1="65" x2="240" y2="65" stroke="#64748b" stroke-width="2"/>
+      <polygon points="240,60 252,65 240,70" fill="#64748b"/>
+      <!-- Process box -->
+      <rect x="252" y="25" width="196" height="80" rx="8" fill="#1a1a5a" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="350" y="55" text-anchor="middle" fill="#a5b4fc" font-family="JetBrains Mono" font-size="12" font-weight="bold">PROCESSING</text>
+      <text x="350" y="75" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="10">all actions needed</text>
+      <text x="350" y="90" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="10">(in English — WHAT to do)</text>
+      <!-- Arrow 2 -->
+      <line x1="448" y1="65" x2="488" y2="65" stroke="#64748b" stroke-width="2"/>
+      <polygon points="488,60 500,65 488,70" fill="#64748b"/>
+      <!-- Output box -->
+      <rect x="500" y="25" width="180" height="80" rx="8" fill="#0a3a2a" stroke="#34d399" stroke-width="1.5"/>
+      <text x="590" y="55" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="12" font-weight="bold">OUTPUT</text>
+      <text x="590" y="75" text-anchor="middle" fill="#a7f3d0" font-family="JetBrains Mono" font-size="10">variable names</text>
+      <text x="590" y="90" text-anchor="middle" fill="#a7f3d0" font-family="JetBrains Mono" font-size="10">for all outputs</text>
+    </svg>
+  </div>
+
+  <!-- Column rules -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+    <div class="card" style="border-color:#1a4a5a;margin:0;">
+      <h3 style="color:#7dd3fc;">📥 INPUT Column</h3>
+      <ul style="margin-top:.5rem;">
+        <li>List of inputs (nouns)</li>
+        <li>Look for: <em>accept / ask the user / get</em></li>
+        <li>Use legal variable names</li>
+        <li>No spaces, no specials</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:#1a1a5a;margin:0;">
+      <h3 style="color:#a5b4fc;">⚙️ PROCESSING Column</h3>
+      <ul style="margin-top:.5rem;">
+        <li>List of actions (verbs)</li>
+        <li>Simple English only — NOT pseudocode</li>
+        <li>Show WHAT to do, not HOW</li>
+        <li>No detailed calculations</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:#0a3a2a;margin:0;">
+      <h3 style="color:#6ee7b7;">📤 OUTPUT Column</h3>
+      <ul style="margin-top:.5rem;">
+        <li>List of outputs (nouns)</li>
+        <li>Look for: <em>display / show / print</em></li>
+        <li>Use legal variable names</li>
+        <li>For messages, just write "message"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Steps to fill an IPO chart -->
+  <div class="card">
+    <h3>How to fill in an IPO Chart — Step by Step</h3>
+    <div class="steps" style="margin-top:1rem;">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Read the problem carefully</strong>
+          <p>Identify every input and output. How many variables do you need?</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>Make up variable names for each input and output</strong>
+          <p>Write them in the INPUT and OUTPUT columns.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body">
+          <strong>List all actions needed in simple English</strong>
+          <p>In the correct order, in the PROCESSING column. Do NOT write pseudocode here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 1 -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>Example 1: Add three numbers</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;"><em>"Accept three numbers, add them together and display the total."</em></p>
+    <table class="ipo-table">
+      <thead>
+        <tr>
+          <th class="th-input">INPUT</th>
+          <th class="th-proc">PROCESSING</th>
+          <th class="th-out">OUTPUT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-input">NUMBER1<br>NUMBER2<br>NUMBER3</td>
+          <td class="td-proc">Accept 3 numbers<br>Add the 3 numbers together<br>Display the total</td>
+          <td class="td-out">TOTAL</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Example 2 -->
+  <div class="card">
+    <h3>Example 2: Student average mark</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;"><em>"Ask the user to input a student's ID number and two test marks. Calculate and display the average mark."</em></p>
+    <table class="ipo-table">
+      <thead>
+        <tr>
+          <th class="th-input">INPUT</th>
+          <th class="th-proc">PROCESSING</th>
+          <th class="th-out">OUTPUT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-input">IDNUMBER<br>TESTMARK1<br>TESTMARK2</td>
+          <td class="td-proc">Get ID number, 2 test marks<br>Calculate the average of the marks<br>Display the average</td>
+          <td class="td-out">AVERAGE<br>message</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout green" style="margin-top:1rem;">
+      <p><strong>Note on "message":</strong> If there is an output message (like "AVERAGE IS 75"), you just write <strong>message</strong> in the OUTPUT column — you do NOT write the full message text.</p>
+    </div>
+    <div class="callout" style="margin-top:.5rem;">
+      <p><strong>Note on PROCESSING:</strong> You can say "Get", "Accept", or "Ask user for" — all are acceptable at WSU.</p>
+    </div>
+  </div>
+
+  <!-- IPO → Pseudocode bridge -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>🔗 From IPO Chart → Pseudocode</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;">Each part of the IPO chart maps directly to pseudocode instructions.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;">
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem;font-family:'JetBrains Mono',monospace;">IPO CHART (Example 2)</div>
+        <table class="ipo-table" style="font-size:.78rem;">
+          <thead><tr><th class="th-input">INPUT</th><th class="th-proc">PROCESSING</th><th class="th-out">OUTPUT</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="td-input">IDNUMBER<br>TESTMARK1<br>TESTMARK2</td>
+              <td class="td-proc">Get ID, 2 marks<br>Calculate average<br>Display average</td>
+              <td class="td-out">AVERAGE<br>message</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:.5rem;font-family:'JetBrains Mono',monospace;">PSEUDOCODE</div>
+        <div class="pseudo" style="margin:0;font-size:.76rem;">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> <span class="var">IDNUMBER</span> <span class="kw">AS</span> <span class="typ">STRING</span>
+  <span class="kw">DECLARE</span> <span class="var">TESTMARK1</span><span class="op">,</span> <span class="var">TESTMARK2</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DECLARE</span> <span class="var">AVERAGE</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">ACCEPT</span> <span class="var">IDNUMBER</span>
+  <span class="kw">ACCEPT</span> <span class="var">TESTMARK1</span>
+  <span class="kw">ACCEPT</span> <span class="var">TESTMARK2</span>
+  <span class="var">AVERAGE</span> <span class="op">=</span> <span class="op">(</span><span class="var">TESTMARK1</span> <span class="op">+</span> <span class="var">TESTMARK2</span><span class="op">)</span> <span class="op">/</span> <span class="op">2</span>
+  <span class="kw">DISPLAY</span> <span class="str">"AVERAGE IS "</span> <span class="var">AVERAGE</span>
+<span class="kw">END</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout warn" style="margin-top:1rem;">
+      <p><strong>Mapping:</strong> INPUT column → DECLARE + ACCEPT &nbsp;|&nbsp; OUTPUT column → DECLARE + DISPLAY &nbsp;|&nbsp; PROCESSING column → the body statements</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ FLOWCHARTS ════════════════════════════════ -->
+<div id="tab-flowcharts" class="section">
+  <div class="section-heading">
+    <div class="eyebrow">// 02 — design tool</div>
+    <h2>Flowcharts</h2>
+    <p>A flowchart is a graphical representation of program logic using geometric shapes and flowlines. At WSU, we combine pseudocode instructions inside the shapes.</p>
+  </div>
+
+  <!-- Symbols -->
+  <div class="card">
+    <h3>Flowchart Symbols</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;">Each shape has a specific meaning. You must use the correct shape for each instruction.</p>
+    <div class="legend-grid">
+
+      <div class="legend-item">
+        <svg viewBox="0 0 80 50"><ellipse cx="40" cy="25" rx="35" ry="18" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/><text x="40" y="30" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">BEGIN/END</text></svg>
+        <div class="lname">Oval / Terminal</div>
+        <div class="luse">BEGIN and END only</div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 80 50"><rect x="5" y="10" width="70" height="30" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/><text x="40" y="30" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">PROCESS</text></svg>
+        <div class="lname">Rectangle</div>
+        <div class="luse">Processing / calculations / DECLARE / assignments</div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 80 50"><polygon points="15,25 30,10 65,10 50,40 15,40" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/><text x="40" y="30" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">I/O</text></svg>
+        <div class="lname">Parallelogram</div>
+        <div class="luse">ACCEPT (input) and DISPLAY (output)</div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 80 50"><polygon points="40,5 75,25 40,45 5,25" fill="#2a1a1a" stroke="#f59e0b" stroke-width="1.5"/><text x="40" y="29" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="8">DECISION</text></svg>
+        <div class="lname">Diamond</div>
+        <div class="luse">IF condition — two exits: T and F</div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 80 50"><circle cx="40" cy="25" r="16" fill="#1a1a3a" stroke="#a5b4fc" stroke-width="1.5"/><text x="40" y="29" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">1</text></svg>
+        <div class="lname">Small Circle</div>
+        <div class="luse">Connector — continues flowchart on next page</div>
+      </div>
+
+      <div class="legend-item">
+        <svg viewBox="0 0 80 50"><line x1="40" y1="5" x2="40" y2="45" stroke="#64748b" stroke-width="2"/><polygon points="35,38 40,48 45,38" fill="#64748b"/></svg>
+        <div class="lname">Arrow / Flowline</div>
+        <div class="luse">Connects all symbols — shows direction</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Rules -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>📋 Flowchart Rules (WSU)</h3>
+    <div class="steps" style="margin-top:1rem;">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body"><strong>Every symbol must contain a correct pseudocode instruction</strong><p>Write real pseudocode (BEGIN, DECLARE, ACCEPT, DISPLAY, IF…THEN, etc.) inside each shape.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body"><strong>Use the correct shape for each instruction</strong><p>Parallelograms = I/O only. Rectangles = processing only. Diamonds = decisions only.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body"><strong>Declare all variables in the first processing box</strong><p>Place all DECLARE instructions in the first rectangle after BEGIN.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body"><strong>All symbols must be joined with connecting lines (arrows)</strong><p>Every shape connects to the next — no floating symbols.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-body"><strong>Decision symbol: label both exits T (True) and F (False)</strong><p>The two lines out of a diamond must always be labelled T and F.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple flowchart diagram — Sequence -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>Visual — Sequence Flowchart Structure</h3>
+    <div class="flowchart-wrap">
+      <svg viewBox="0 0 200 520" xmlns="http://www.w3.org/2000/svg" style="max-height:520px;">
+        <!-- BEGIN oval -->
+        <ellipse cx="100" cy="35" rx="60" ry="22" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="100" y="40" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">BEGIN</text>
+        <!-- arrow -->
+        <line x1="100" y1="57" x2="100" y2="85" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="95,80 100,92 105,80" fill="#475569"/>
+        <!-- DECLARE rect -->
+        <rect x="30" y="92" width="140" height="44" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="100" y="110" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">DECLARE variables</text>
+        <text x="100" y="126" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">AS REAL / STRING</text>
+        <!-- arrow -->
+        <line x1="100" y1="136" x2="100" y2="164" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="95,159 100,171 105,159" fill="#475569"/>
+        <!-- DISPLAY parallelogram -->
+        <polygon points="20,171 40,207 180,207 160,171" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="100" y="194" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">DISPLAY "prompt"</text>
+        <!-- arrow -->
+        <line x1="100" y1="207" x2="100" y2="235" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="95,230 100,242 105,230" fill="#475569"/>
+        <!-- ACCEPT parallelogram -->
+        <polygon points="20,242 40,278 180,278 160,242" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="100" y="265" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">ACCEPT variable</text>
+        <!-- arrow -->
+        <line x1="100" y1="278" x2="100" y2="306" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="95,301 100,313 105,301" fill="#475569"/>
+        <!-- CALC rect -->
+        <rect x="30" y="313" width="140" height="34" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="100" y="335" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">result = a + b</text>
+        <!-- arrow -->
+        <line x1="100" y1="347" x2="100" y2="375" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="95,370 100,382 105,370" fill="#475569"/>
+        <!-- DISPLAY result parallelogram -->
+        <polygon points="20,382 40,418 180,418 160,382" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="100" y="405" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">DISPLAY result</text>
+        <!-- arrow -->
+        <line x1="100" y1="418" x2="100" y2="446" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="95,441 100,453 105,441" fill="#475569"/>
+        <!-- END oval -->
+        <ellipse cx="100" cy="470" rx="60" ry="22" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="100" y="475" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">END</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Decision Flowchart diagram -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>Visual — Selection (IF) Flowchart Structure</h3>
+    <div class="flowchart-wrap">
+      <svg viewBox="0 0 340 420" xmlns="http://www.w3.org/2000/svg" style="max-height:420px;">
+        <!-- previous steps ... -->
+        <ellipse cx="170" cy="28" rx="60" ry="20" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="170" y="33" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="10" font-weight="bold">... (previous steps)</text>
+        <!-- arrow down to diamond -->
+        <line x1="170" y1="48" x2="170" y2="76" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="165,71 170,83 175,71" fill="#475569"/>
+        <!-- Decision diamond -->
+        <polygon points="170,83 310,165 170,247 30,165" fill="#2a1a1a" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="170" y="160" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="9">IF condition</text>
+        <text x="170" y="175" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="9">THEN</text>
+        <!-- T label + arrow right -->
+        <line x1="310" y1="165" x2="340" y2="165" stroke="#10b981" stroke-width="1.5"/>
+        <text x="316" y="158" fill="#10b981" font-family="JetBrains Mono" font-size="10" font-weight="bold">T</text>
+        <!-- True action box -->
+        <!-- extend T arrow down -->
+        <line x1="340" y1="165" x2="340" y2="220" stroke="#10b981" stroke-width="1.5"/>
+        <polygon points="335,215 340,227 345,215" fill="#10b981"/>
+        <rect x="290" y="227" width="100" height="36" rx="5" fill="#0a2a1a" stroke="#10b981" stroke-width="1.5"/>
+        <text x="340" y="250" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="9">DISPLAY msg</text>
+        <!-- T rejoins -->
+        <line x1="340" y1="263" x2="340" y2="320" stroke="#475569" stroke-width="1.5"/>
+        <!-- F label + arrow down -->
+        <line x1="170" y1="247" x2="170" y2="320" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="178" y="265" fill="#ef4444" font-family="JetBrains Mono" font-size="10" font-weight="bold">F</text>
+        <!-- merge line -->
+        <line x1="170" y1="320" x2="340" y2="320" stroke="#475569" stroke-width="1.5"/>
+        <line x1="255" y1="320" x2="255" y2="348" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="250,343 255,355 260,343" fill="#475569"/>
+        <!-- END oval -->
+        <ellipse cx="255" cy="372" rx="60" ry="20" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="255" y="377" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="10" font-weight="bold">END</text>
+      </svg>
+    </div>
+    <div class="callout warn" style="margin-top:.75rem;">
+      <p><strong>Remember:</strong> The two lines out of the diamond are always labelled <strong>T</strong> (True) and <strong>F</strong> (False). Never leave them unlabelled.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ FULL EXAMPLES ════════════════════════════════ -->
+<div id="tab-examples" class="section">
+  <div class="section-heading">
+    <div class="eyebrow">// 03 — worked examples</div>
+    <h2>Full Worked Examples</h2>
+    <p>IPO chart → Pseudocode → Flowchart for each problem from the notes.</p>
+  </div>
+
+  <!-- Example 1 -->
+  <div class="card">
+    <h3>Example 1 — Two prices, display total</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;"><em>"Write a program to ask the user to input 2 prices. Calculate and display the total price."</em></p>
+    <table class="ipo-table" style="margin-bottom:1rem;">
+      <thead><tr><th class="th-input">INPUT</th><th class="th-proc">PROCESSING</th><th class="th-out">OUTPUT</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-input">PRICE1<br>PRICE2</td>
+          <td class="td-proc">Get 2 prices<br>Calculate and display the total</td>
+          <td class="td-out">TOTAL</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pseudo">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> <span class="var">PRICE1</span><span class="op">,</span> <span class="var">PRICE2</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DECLARE</span> <span class="var">TOTAL</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DISPLAY</span> <span class="str">"Please input two prices"</span>
+  <span class="kw">ACCEPT</span> <span class="var">PRICE1</span>
+  <span class="kw">ACCEPT</span> <span class="var">PRICE2</span>
+  <span class="var">TOTAL</span> <span class="op">=</span> <span class="var">PRICE1</span> <span class="op">+</span> <span class="var">PRICE2</span>
+  <span class="kw">DISPLAY</span> <span class="str">"TOTAL IS "</span> <span class="var">TOTAL</span>
+<span class="kw">END</span>
+    </div>
+    <div class="flowchart-wrap" style="margin-top:1rem;">
+      <svg viewBox="0 0 220 570" xmlns="http://www.w3.org/2000/svg" style="max-height:570px;">
+        <ellipse cx="110" cy="30" rx="65" ry="22" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="110" y="35" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">BEGIN</text>
+        <line x1="110" y1="52" x2="110" y2="75" stroke="#475569" stroke-width="1.5"/><polygon points="105,70 110,82 115,70" fill="#475569"/>
+        <rect x="20" y="82" width="180" height="44" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="110" y="101" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">DECLARE PRICE1, PRICE2</text>
+        <text x="110" y="117" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">DECLARE TOTAL AS REAL</text>
+        <line x1="110" y1="126" x2="110" y2="149" stroke="#475569" stroke-width="1.5"/><polygon points="105,144 110,156 115,144" fill="#475569"/>
+        <polygon points="10,156 32,186 188,186 166,156" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="110" y="175" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">DISPLAY "input two prices"</text>
+        <line x1="110" y1="186" x2="110" y2="209" stroke="#475569" stroke-width="1.5"/><polygon points="105,204 110,216 115,204" fill="#475569"/>
+        <polygon points="10,216 32,246 188,246 166,216" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="110" y="235" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">ACCEPT PRICE1</text>
+        <line x1="110" y1="246" x2="110" y2="269" stroke="#475569" stroke-width="1.5"/><polygon points="105,264 110,276 115,264" fill="#475569"/>
+        <polygon points="10,276 32,306 188,306 166,276" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="110" y="295" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">ACCEPT PRICE2</text>
+        <line x1="110" y1="306" x2="110" y2="329" stroke="#475569" stroke-width="1.5"/><polygon points="105,324 110,336 115,324" fill="#475569"/>
+        <rect x="20" y="336" width="180" height="34" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="110" y="358" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">TOTAL = PRICE1 + PRICE2</text>
+        <line x1="110" y1="370" x2="110" y2="393" stroke="#475569" stroke-width="1.5"/><polygon points="105,388 110,400 115,388" fill="#475569"/>
+        <polygon points="10,400 32,430 188,430 166,400" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="110" y="419" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">DISPLAY "TOTAL IS " TOTAL</text>
+        <line x1="110" y1="430" x2="110" y2="453" stroke="#475569" stroke-width="1.5"/><polygon points="105,448 110,460 115,448" fill="#475569"/>
+        <ellipse cx="110" cy="477" rx="65" ry="22" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="110" y="482" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">END</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Example 2 -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>Example 2 — Age check (IF selection)</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;"><em>"Ask the user to input the student's age. If the age is greater than or equal to 18, display 'YOU CAN VOTE'."</em></p>
+    <table class="ipo-table" style="margin-bottom:1rem;">
+      <thead><tr><th class="th-input">INPUT</th><th class="th-proc">PROCESSING</th><th class="th-out">OUTPUT</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-input">AGE</td>
+          <td class="td-proc">Get student's age<br>If student &gt;= 18 display message</td>
+          <td class="td-out">message</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pseudo">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> <span class="var">AGE</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DISPLAY</span> <span class="str">"PLEASE INPUT AGE"</span>
+  <span class="kw">ACCEPT</span> <span class="var">AGE</span>
+  <span class="kw">IF</span> <span class="var">AGE</span> <span class="op">&gt;=</span> <span class="op">18</span> <span class="kw">THEN</span>
+    <span class="kw">DISPLAY</span> <span class="str">"YOU CAN VOTE"</span>
+  <span class="kw">ENDIF</span>
+<span class="kw">END</span>
+    </div>
+    <div class="flowchart-wrap" style="margin-top:1rem;">
+      <svg viewBox="0 0 360 480" xmlns="http://www.w3.org/2000/svg" style="max-height:480px;">
+        <ellipse cx="160" cy="28" rx="65" ry="22" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="160" y="33" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">BEGIN</text>
+        <line x1="160" y1="50" x2="160" y2="73" stroke="#475569" stroke-width="1.5"/><polygon points="155,68 160,80 165,68" fill="#475569"/>
+        <rect x="70" y="80" width="180" height="34" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="160" y="102" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">DECLARE AGE AS REAL</text>
+        <line x1="160" y1="114" x2="160" y2="137" stroke="#475569" stroke-width="1.5"/><polygon points="155,132 160,144 165,132" fill="#475569"/>
+        <polygon points="60,144 82,174 238,174 216,144" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="160" y="163" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">DISPLAY "PLEASE INPUT AGE"</text>
+        <line x1="160" y1="174" x2="160" y2="197" stroke="#475569" stroke-width="1.5"/><polygon points="155,192 160,204 165,192" fill="#475569"/>
+        <polygon points="60,204 82,234 238,234 216,204" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="160" y="223" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">ACCEPT AGE</text>
+        <line x1="160" y1="234" x2="160" y2="257" stroke="#475569" stroke-width="1.5"/><polygon points="155,252 160,264 165,252" fill="#475569"/>
+        <!-- Diamond -->
+        <polygon points="160,264 295,320 160,376 25,320" fill="#2a1a1a" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="160" y="315" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="9">IF AGE &gt;= 18</text>
+        <text x="160" y="330" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="9">THEN</text>
+        <!-- T arrow right -->
+        <line x1="295" y1="320" x2="345" y2="320" stroke="#10b981" stroke-width="1.5"/>
+        <text x="302" y="313" fill="#10b981" font-family="JetBrains Mono" font-size="10" font-weight="bold">T</text>
+        <line x1="345" y1="320" x2="345" y2="355" stroke="#10b981" stroke-width="1.5"/>
+        <polygon points="340,350 345,362 350,350" fill="#10b981"/>
+        <polygon points="295,362 315,392 355,392 335,362" fill="#0a2a1a" stroke="#10b981" stroke-width="1.5"/>
+        <text x="325" y="381" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="8">DISPLAY "YOU CAN VOTE"</text>
+        <!-- T rejoins -->
+        <line x1="345" y1="392" x2="345" y2="430" stroke="#475569" stroke-width="1.5"/>
+        <!-- F arrow down -->
+        <line x1="160" y1="376" x2="160" y2="430" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="168" y="408" fill="#ef4444" font-family="JetBrains Mono" font-size="10" font-weight="bold">F</text>
+        <!-- merge -->
+        <line x1="160" y1="430" x2="345" y2="430" stroke="#475569" stroke-width="1.5"/>
+        <line x1="252" y1="430" x2="252" y2="453" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="247,448 252,460 257,448" fill="#475569"/>
+        <ellipse cx="252" cy="467" rx="65" ry="15" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="252" y="472" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">END</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Example 3 -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3>Example 3 — Discount calculation (IF / ELSE)</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;"><em>"Ask the user to input 2 prices. If the total is greater than R100, subtract 10% discount from the total. Display the final total after the discount."</em></p>
+    <table class="ipo-table" style="margin-bottom:1rem;">
+      <thead><tr><th class="th-input">INPUT</th><th class="th-proc">PROCESSING</th><th class="th-out">OUTPUT</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-input">PRICE1<br>PRICE2</td>
+          <td class="td-proc">Get 2 prices<br>Calculate the total<br>If total &gt; R100, subtract 10%<br>Display total after discount</td>
+          <td class="td-out">TOTAL1</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div>
+        <div class="tag tag-blue" style="margin-bottom:.5rem;">Solution 1 (no ELSE)</div>
+        <div class="pseudo" style="font-size:.78rem;">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> <span class="var">PRICE1</span><span class="op">,</span><span class="var">PRICE2</span><span class="op">,</span><span class="var">TOTAL1</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DISPLAY</span> <span class="str">"INPUT TWO PRICES"</span>
+  <span class="kw">ACCEPT</span> <span class="var">PRICE1</span>
+  <span class="kw">ACCEPT</span> <span class="var">PRICE2</span>
+  <span class="var">TOTAL1</span> <span class="op">=</span> <span class="var">PRICE1</span> <span class="op">+</span> <span class="var">PRICE2</span>
+  <span class="kw">IF</span> <span class="var">TOTAL1</span> <span class="op">&gt;</span> <span class="op">100</span> <span class="kw">THEN</span>
+    <span class="var">TOTAL1</span> <span class="op">=</span> <span class="var">TOTAL1</span> <span class="op">-</span> <span class="op">(0.1</span> <span class="op">*</span> <span class="var">TOTAL1</span><span class="op">)</span>
+  <span class="kw">ENDIF</span>
+  <span class="kw">DISPLAY</span> <span class="str">"TOTAL AFTER DISCOUNT"</span> <span class="var">TOTAL1</span>
+<span class="kw">END</span>
+        </div>
+      </div>
+      <div>
+        <div class="tag tag-purple" style="margin-bottom:.5rem;">Solution 2 (with ELSE)</div>
+        <div class="pseudo" style="font-size:.78rem;">
+<span class="kw">BEGIN</span>
+  <span class="kw">DECLARE</span> <span class="var">PRICE1</span><span class="op">,</span><span class="var">PRICE2</span><span class="op">,</span><span class="var">TOTAL1</span><span class="op">,</span><span class="var">DISCOUNT</span> <span class="kw">AS</span> <span class="typ">REAL</span>
+  <span class="kw">DISPLAY</span> <span class="str">"INPUT TWO PRICES"</span>
+  <span class="kw">ACCEPT</span> <span class="var">PRICE1</span>
+  <span class="kw">ACCEPT</span> <span class="var">PRICE2</span>
+  <span class="var">TOTAL1</span> <span class="op">=</span> <span class="var">PRICE1</span> <span class="op">+</span> <span class="var">PRICE2</span>
+  <span class="kw">IF</span> <span class="var">TOTAL1</span> <span class="op">&gt;</span> <span class="op">100</span> <span class="kw">THEN</span>
+    <span class="var">DISCOUNT</span> <span class="op">=</span> <span class="op">0.1</span> <span class="op">*</span> <span class="var">TOTAL1</span>
+  <span class="kw">ELSE</span>
+    <span class="var">DISCOUNT</span> <span class="op">=</span> <span class="op">0</span>
+  <span class="kw">ENDIF</span>
+  <span class="var">TOTAL1</span> <span class="op">=</span> <span class="var">TOTAL1</span> <span class="op">-</span> <span class="var">DISCOUNT</span>
+  <span class="kw">DISPLAY</span> <span class="str">"TOTAL AFTER DISCOUNT"</span> <span class="var">TOTAL1</span>
+<span class="kw">END</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flowchart for Example 3 Solution 2 -->
+    <div class="flowchart-wrap" style="margin-top:1rem;">
+      <svg viewBox="0 0 440 640" xmlns="http://www.w3.org/2000/svg" style="max-height:640px;">
+        <!-- BEGIN -->
+        <ellipse cx="200" cy="28" rx="65" ry="22" fill="#1a4a5a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="200" y="33" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="11" font-weight="bold">BEGIN</text>
+        <line x1="200" y1="50" x2="200" y2="73" stroke="#475569" stroke-width="1.5"/><polygon points="195,68 200,80 205,68" fill="#475569"/>
+        <!-- DECLARE -->
+        <rect x="80" y="80" width="240" height="44" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="200" y="98" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="8.5">DECLARE PRICE1, PRICE2,</text>
+        <text x="200" y="114" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="8.5">TOTAL1, DISCOUNT AS REAL</text>
+        <line x1="200" y1="124" x2="200" y2="147" stroke="#475569" stroke-width="1.5"/><polygon points="195,142 200,154 205,142" fill="#475569"/>
+        <!-- DISPLAY -->
+        <polygon points="70,154 92,184 308,184 286,154" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="200" y="173" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="8.5">DISPLAY "INPUT TWO PRICES"</text>
+        <line x1="200" y1="184" x2="200" y2="207" stroke="#475569" stroke-width="1.5"/><polygon points="195,202 200,214 205,202" fill="#475569"/>
+        <!-- ACCEPT PRICE1 -->
+        <polygon points="70,214 92,244 308,244 286,214" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="200" y="233" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">ACCEPT PRICE1</text>
+        <line x1="200" y1="244" x2="200" y2="267" stroke="#475569" stroke-width="1.5"/><polygon points="195,262 200,274 205,262" fill="#475569"/>
+        <!-- ACCEPT PRICE2 -->
+        <polygon points="70,274 92,304 308,304 286,274" fill="#1a3a4a" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="200" y="293" text-anchor="middle" fill="#bae6fd" font-family="JetBrains Mono" font-size="9">ACCEPT PRICE2</text>
+        <line x1="200" y1="304" x2="200" y2="327" stroke="#475569" stroke-width="1.5"/><polygon points="195,322 200,334 205,322" fill="#475569"/>
+        <!-- TOTAL calc -->
+        <rect x="80" y="334" width="240" height="30" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="200" y="354" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">TOTAL1 = PRICE1 + PRICE2</text>
+        <line x1="200" y1="364" x2="200" y2="387" stroke="#475569" stroke-width="1.5"/><polygon points="195,382 200,394 205,382" fill="#475569"/>
+        <!-- Diamond IF -->
+        <polygon points="200,394 360,444 200,494 40,444" fill="#2a1a1a" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="200" y="438" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="9">IF TOTAL1</text>
+        <text x="200" y="454" text-anchor="middle" fill="#fcd34d" font-family="JetBrains Mono" font-size="9">&gt; 100 THEN</text>
+        <!-- T label right -->
+        <line x1="360" y1="444" x2="420" y2="444" stroke="#10b981" stroke-width="1.5"/>
+        <text x="367" y="437" fill="#10b981" font-family="JetBrains Mono" font-size="10" font-weight="bold">T</text>
+        <line x1="420" y1="444" x2="420" y2="480" stroke="#10b981" stroke-width="1.5"/>
+        <polygon points="415,475 420,487 425,475" fill="#10b981"/>
+        <rect x="370" y="487" width="110" height="30" rx="5" fill="#0a2a1a" stroke="#10b981" stroke-width="1.5"/>
+        <text x="425" y="507" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono" font-size="8">DISCOUNT = 0.1 * TOTAL1</text>
+        <!-- F label left -->
+        <line x1="40" y1="444" x2="0" y2="444" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="10" y="437" fill="#ef4444" font-family="JetBrains Mono" font-size="10" font-weight="bold">F</text>
+        <line x1="0" y1="444" x2="0" y2="480" stroke="#ef4444" stroke-width="1.5"/>
+        <polygon points="-5,475 0,487 5,475" fill="#ef4444"/>
+        <rect x="-30" y="487" width="90" height="30" rx="5" fill="#2a0a0a" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="15" y="507" text-anchor="middle" fill="#fca5a5" font-family="JetBrains Mono" font-size="9">DISCOUNT = 0</text>
+        <!-- merge both sides -->
+        <line x1="420" y1="517" x2="420" y2="545" stroke="#475569" stroke-width="1.5"/>
+        <line x1="15" y1="517" x2="15" y2="545" stroke="#475569" stroke-width="1.5"/>
+        <line x1="15" y1="545" x2="420" y2="545" stroke="#475569" stroke-width="1.5"/>
+        <line x1="200" y1="545" x2="200" y2="565" stroke="#475569" stroke-width="1.5"/>
+        <polygon points="195,560 200,572 205,560" fill="#475569"/>
+        <!-- TOTAL1 = ... -->
+        <rect x="70" y="572" width="260" height="30" rx="5" fill="#1a2a4a" stroke="#818cf8" stroke-width="1.5"/>
+        <text x="200" y="592" text-anchor="middle" fill="#c7d2fe" font-family="JetBrains Mono" font-size="9">TOTAL1 = TOTAL1 - DISCOUNT</text>
+        <!-- END (off-screen — connector would go here in a real multi-page flowchart) -->
+        <line x1="200" y1="602" x2="200" y2="617" stroke="#475569" stroke-width="1.5"/>
+        <text x="200" y="630" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono" font-size="8">→ DISPLAY + END (continued)</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>Modau.M IT &nbsp;·&nbsp; WSU Dev Software 1 — Module 4 Study App &nbsp;·&nbsp; 2025</footer>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`#tab-${name}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+  function toggleTheme() {
+    const light = document.body.classList.toggle('light');
+    document.getElementById('themeBtn').textContent = light ? '🌙 Dark' : '☀️ Light';
+  }
+</script>
+</body>
+</html>

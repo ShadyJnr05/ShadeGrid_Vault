@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}ShadeGrid — Home{% endblock %}
+{% block content %}
+
+<section class="status-panel">
+    <div class="status-row">
+        <span class="dim">host</span>
+        <span>{{ host }}:{{ port }}</span>
+    </div>
+    <div class="status-row">
+        <span class="dim">status</span>
+        {% if connected %}
+            <span class="ok">● connected</span>
+        {% else %}
+            <span class="err">● unreachable — is server.py running?</span>
+        {% endif %}
+    </div>
+</section>
+
+<h1>ShadeGrid</h1>
+{% if username %}
+    <p class="lede">Logged in as <strong>{{ username }}</strong>.</p>
+    <div class="actions">
+        <a class="btn" href="{{ url_for('dashboard') }}">Go to dashboard</a>
+        <a class="btn btn-ghost" href="{{ url_for('logout') }}">Log out</a>
+    </div>
+{% else %}
+    <p class="lede">A minimal client-server storage app. The browser talks to Flask over HTTP; Flask talks to the raw-socket backend on your behalf.</p>
+    <div class="actions">
+        <a class="btn" href="{{ url_for('login') }}">Log in</a>
+        <a class="btn btn-ghost" href="{{ url_for('register') }}">Register</a>
+    </div>
+{% endif %}
+
+{% endblock %}
